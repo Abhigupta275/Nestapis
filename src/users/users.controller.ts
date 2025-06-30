@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')            // /users
@@ -13,8 +13,8 @@ export class UsersController {
 
 
     @Get(':id')        // GET /users/:id
-    findOne(@Param('id') id: string) {
-        return this.usersService.findOne(+id); // Convert id to number
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.usersService.findOne(id); // Convert id to number
     }
 
     @Post()
@@ -23,13 +23,16 @@ export class UsersController {
     }
 
     @Patch(':id')        // PATCH /users/:id
-    update(@Param('id') id:string, @Body() userUpdate: {name?: string, role?: 'ADMIN' | 'USER'}){
-        return this.usersService.update(+id, userUpdate); // Convert id to number
+    update(@Param('id', ParseIntPipe) id:number, @Body() userUpdate: {name?: string, role?: 'ADMIN' | 'USER'}){
+        return this.usersService.update(id, userUpdate); // Convert id to number
     }
 
     @Delete(':id')       // DELETE /users/:id
-    remove(@Param('id') id: string) {
-        return this.usersService.delete(+id); // Convert id to number
+    remove(@Param('id', ParseIntPipe) id: number) {
+        // ParseIntPipe ensures id is a number
+        // If id is not a number, it will throw an error
+        // If you want to convert id to number manually, you can use +id
+        return this.usersService.delete(id); // Convert id to number
     }
 
 }
