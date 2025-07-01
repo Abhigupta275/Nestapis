@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+// This service provides methods to manage users, including finding, creating, updating, and deleting users.
 
 @Injectable()
 export class UsersService {
@@ -32,19 +35,19 @@ export class UsersService {
         return user
     }
 
-    create(user : {name : string , role : 'ADMIN' | 'USER'}) {
+    create(createUserDto : CreateUserDto) {
       const newUser = {
         id: this.users.length + 1,
-        ...user
+        ...createUserDto
       };
       this.users.push(newUser);
       return newUser;
   }
 
-  update(id: number, userUpdate: {name?: string, role?: 'ADMIN' | 'USER'}) {
+  update(id: number, updateUserDto: UpdateUserDto) {
     this.users = this.users.map(user => {
         if (user.id === id) {
-            return { ...user, ...userUpdate };
+            return { ...user, ...updateUserDto };
         }
         return user;
     }
